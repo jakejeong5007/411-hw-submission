@@ -27,6 +27,21 @@ class Meal:
 
 
 def create_meal(meal: str, cuisine: str, price: float, difficulty: str) -> None:
+    """
+    Create a new meal 
+    
+    Args: 
+        meal (str): Meal's name
+        cuisine (str):
+        price (float):
+        difficulty(str):
+        
+    Rasies:
+        Value Error: If the price is negative. 
+        Value Error: If the difficulty is not LOW, MED, or HIGH
+        Value Error: If there already exists a meal with the same name
+        sqlite3.Error: If any database error occurs
+    """
     if not isinstance(price, (int, float)) or price <= 0:
         raise ValueError(f"Invalid price: {price}. Price must be a positive number.")
     if difficulty not in ['LOW', 'MED', 'HIGH']:
@@ -53,6 +68,18 @@ def create_meal(meal: str, cuisine: str, price: float, difficulty: str) -> None:
 
 
 def delete_meal(meal_id: int) -> None:
+    """
+    Create a new meal 
+    
+    Args: 
+        meal (str): Meal's name
+        cuisine (str):
+        price (float):
+        difficulty(str):
+        
+    Rasies:
+        
+    """
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
@@ -76,6 +103,19 @@ def delete_meal(meal_id: int) -> None:
         raise e
 
 def get_leaderboard(sort_by: str="wins") -> dict[str, Any]:
+    """
+    Create a new meal 
+    
+    Args: 
+        meal (str): Meal's name
+        cuisine (str):
+        price (float):
+        difficulty(str):
+        
+    Rasies:
+        
+    """
+    
     query = """
         SELECT id, meal, cuisine, price, difficulty, battles, wins, (wins * 1.0 / battles) AS win_pct
         FROM meals WHERE deleted = false AND battles > 0
@@ -117,6 +157,18 @@ def get_leaderboard(sort_by: str="wins") -> dict[str, Any]:
         raise e
 
 def get_meal_by_id(meal_id: int) -> Meal:
+    """
+    Create a new meal 
+    
+    Args: 
+        meal (str): Meal's name
+        cuisine (str):
+        price (float):
+        difficulty(str):
+        
+    Rasies:
+        
+    """
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
@@ -138,6 +190,18 @@ def get_meal_by_id(meal_id: int) -> Meal:
 
 
 def get_meal_by_name(meal_name: str) -> Meal:
+    """
+    Create a new meal 
+    
+    Args: 
+        meal (str): Meal's name
+        cuisine (str):
+        price (float):
+        difficulty(str):
+        
+    Rasies:
+        
+    """
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
@@ -159,6 +223,18 @@ def get_meal_by_name(meal_name: str) -> Meal:
 
 
 def update_meal_stats(meal_id: int, result: str) -> None:
+    """
+    Create a new meal 
+    
+    Args: 
+        meal (str): Meal's name
+        cuisine (str):
+        price (float):
+        difficulty(str):
+        
+    Rasies:
+        
+    """
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
