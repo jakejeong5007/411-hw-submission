@@ -69,13 +69,10 @@ def create_meal(meal: str, cuisine: str, price: float, difficulty: str) -> None:
 
 def delete_meal(meal_id: int) -> None:
     """
-    Create a new meal 
+    Delete a meal 
     
     Args: 
-        meal (str): Meal's name
-        cuisine (str):
-        price (float):
-        difficulty(str):
+        meal_id (int): Unique ID for meal
         
     Rasies:
         
