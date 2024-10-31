@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import logging
 import sqlite3
 from typing import Any
-
+import os
 from meal_max.utils.sql_utils import get_db_connection
 from meal_max.utils.logger import configure_logger
 
@@ -66,6 +66,26 @@ def create_meal(meal: str, cuisine: str, price: float, difficulty: str) -> None:
         logger.error("Database error: %s", str(e))
         raise e
 
+def clear_meals() -> None:
+    """
+    Recreates the meals table, effectively deleting all meals.
+
+    Raises:
+        sqlite3.Error: If any database error occurs.
+    """
+    try:
+        with open(os.getenv("SQL_CREATE_TABLE_PATH", "/app/sql/create_meal_table.sql"), "r") as fh:
+            create_table_script = fh.read()
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.executescript(create_table_script)
+            conn.commit()
+
+            logger.info("Meals cleared successfully.")
+
+    except sqlite3.Error as e:
+        logger.error("Database error while clearing meals: %s", str(e))
+        raise e
 
 def delete_meal(meal_id: int) -> None:
     """
@@ -75,7 +95,9 @@ def delete_meal(meal_id: int) -> None:
         meal_id (int): Unique ID for meal
         
     Rasies:
-        
+       ValueError: Meal with provided meal ID has already been deleted.
+       ValueError: There does not exist a meal with the provided meal ID
+       sqlite3.Error: Database Error 
     """
     try:
         with get_db_connection() as conn:
@@ -101,13 +123,10 @@ def delete_meal(meal_id: int) -> None:
 
 def get_leaderboard(sort_by: str="wins") -> dict[str, Any]:
     """
-    Create a new meal 
+    Loads leader board 
     
     Args: 
-        meal (str): Meal's name
-        cuisine (str):
-        price (float):
-        difficulty(str):
+       sort_by (str): Argument to decide what to sort by
         
     Rasies:
         
