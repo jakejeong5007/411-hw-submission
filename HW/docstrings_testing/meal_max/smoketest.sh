@@ -92,7 +92,33 @@ create_meal() {
 
   get_all_meals() {
     echo "Getting all meals in the meal list..."
-    
+    response=$(curl -s -X GET "$BASE_URL/get-all-meals-from-meals")
+    if echo "$response" | grep -q '"status": "success"'; then
+      echo "All meals retrieved successfully."
+      if [ "$ECHO_JSON" = true ]; then
+        echo "Meals JSON:"
+        echo "$response" | jq .
+      fi
+    else
+      echo "Failed to get meals."
+      exit 1
+    fi
+  }
+
+  get_meal_by_id() {
+    meal_id = $1
+    echo "Getting meal by ID ($meal_id)..."
+    response=$(curl -s -X GET "$BASE_URL/get-meal-from-meals-by-id/$meal_id")
+    if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal retrieved successfully by ID ($meal_id)."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "Meal JSON (ID $meal_id):"
+      echo "$response" | jq .
+    fi
+  else
+    echo "Failed to get meal by ID ($meal_id)."
+    exit 1
+  fi
   }
 
 
