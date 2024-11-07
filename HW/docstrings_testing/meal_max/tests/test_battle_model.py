@@ -10,11 +10,11 @@ def battle_model():
 
 @pytest.fixture
 def sample_meal1():
-    return Meal(1, "Meal 1", "Cuisine 1", 0.99, "LOW")
+    return Meal(1, "Meal 1", "Cuisine 1", 1, "LOW")
 
 @pytest.fixture
 def sample_meal2():
-    return Meal(2, "Meal 2", "Cuisine 2", 1.99, "HIGH")
+    return Meal(2, "Meal 2", "Cuisine 2", 2, "HIGH")
     
 @pytest.fixture
 def sample_battle(sample_meal1, sample_meal2):
@@ -38,6 +38,10 @@ def test_clear_combatants(battle_model, caplog):
     assert "Clearing empty combatants" in caplog.text, "Expected warning message when clearing empty combatants"
 
 def test_get_battle_score(battle_model, sample_meal1):
+    """Test getting the score of a meal"""
+    expected_score = 6
+    calculated_score = battle_model.get_battle_score(sample_meal1)
+    battle_model.assertEqual(expected_score, calculated_score)
 
 def test_get_combatants(battle_model, sample_battle):
     """Test successfully retrieving all combatants from combatants."""
