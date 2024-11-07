@@ -22,6 +22,11 @@ def sample_battle(sample_meal1, sample_meal2):
 
 
 def test_battle():
+    """Test a battle between 2 meals"""
+    battle_model.combatants.extend(sample_battle)
+    assert len(battle_model.combatants) == 2
+    assert battle_model.combatants[0].meal == "Meal 1"
+    assert battle_model.combatants[1].meal == "Meal 2"
 
 def test_clear_combatants(battle_model, sample_battle):
     """ Test clearing the combatants """
