@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the base URL for the Flask API
-BASE_URL="http://localhost:5000/api"
+BASE_URL="http://localhost:5001/api"
 
 # Flag to control whether to echo JSON output
 ECHO_JSON=false
@@ -21,6 +21,8 @@ done
 # Health checks
 #
 ###############################################
+
+echo "Health Checks Start"
 
 # Function to check the health of the service
 check_health() {
@@ -45,5 +47,20 @@ check_db() {
     exit 1
   fi
 }
+
+############################################################
+#
+# Meal Management
+#
+############################################################
+
+clear_
+
+
+# Health checks
+check_health
+check_db
+
+
 
 echo "All tests passed succesfully"
