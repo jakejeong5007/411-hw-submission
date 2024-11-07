@@ -54,13 +54,54 @@ check_db() {
 #
 ############################################################
 
-clear_
+clear_meals() {
+  echo "Clearing the meal list..."
+  curl -s -X DELETE "$BASE_URL/clear-meals" | grep -a '"status": "success"'
+}
+
+create_meal() {
+  meal=$1
+  cuisine=$1
+  price=$3
+  difficulty=$4
+
+  echo "Adding meal ($meal - $cuisine, $price, $difficulty) to the meal list..."
+  curl -s -X POST "$BASE_URL/create-meal" -H "Content-Type: application/json" \
+    -d "{\"meal\":\"$meal\", \"cuisine\":\"$cuisine\", \"price\":\"$price\", \"difficulty\":\"$difficulty\"}" | grep -q '"status": "success"'
+
+  if [$? -eq 0]; then
+    echo "Meal added successfully."
+  else
+    echo "Failed to add meal"
+    exit 1
+  fi 
+}
+
+  delete_meal_by_id() {
+    meal_id=$1
+
+    echo "Deleting meal by ID ($meal_id)..."
+    response=$(curl -s -X DELETE "$BASE_URL/delete_meal/$meal_id")
+    if echo "$response" | grep -q '"status": "success"'; then
+      echo "Meal deleted successfully by ID ($meal_id)."
+    else
+      echo "Failed to delete meal by ID ($meal_id)."
+      exit 1
+    fi
+  }
+
+  get_all_meals() {
+    echo "Getting all meals in the meal list..."
+    
+  }
 
 
 # Health checks
 check_health
 check_db
 
+# Clear the meal list
+clear_meals
 
 
 echo "All tests passed succesfully"
