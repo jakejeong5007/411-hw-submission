@@ -21,7 +21,7 @@ def sample_battle(sample_meal1, sample_meal2):
     return [sample_meal1, sample_meal2):
 
 
-def test_battle():
+def test_battle(battle_model, sample_meal):
     """Test a battle between 2 meals"""
     battle_model.combatants.extend(sample_battle)
     assert len(battle_model.combatants) == 2
