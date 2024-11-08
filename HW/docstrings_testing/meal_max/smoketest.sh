@@ -50,7 +50,7 @@ check_db() {
 
 ############################################################
 #
-# Meal Management
+# Meals
 #
 ############################################################
 
@@ -59,7 +59,7 @@ clear_meals() {
   curl -s -X DELETE "$BASE_URL/clear-meals" | grep -a '"status": "success"'
 }
 
-create_meal() {
+add_meal() {
   meal=$1
   cuisine=$1
   price=$3
@@ -77,24 +77,90 @@ create_meal() {
   fi 
 }
 
-  delete_meal_by_id() {
-    meal_id=$1
+delete_meal() {
+  meal_id=$1
 
-    echo "Deleting meal by ID ($meal_id)..."
-    response=$(curl -s -X DELETE "$BASE_URL/delete_meal/$meal_id")
-    if echo "$response" | grep -q '"status": "success"'; then
-      echo "Meal deleted successfully by ID ($meal_id)."
-    else
-      echo "Failed to delete meal by ID ($meal_id)."
-      exit 1
+  echo "Deleting meal by ID ($meal_id)..."
+  response=$(curl -s -X DELETE "$BASE_URL/delete-meal/$meal_id")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal deleted successfully by ID ($meal_id)."
+  else
+    echo "Failed to delete meal by ID ($meal_id)."
+    exit 1
+  fi
+}
+
+get_meal_by_id() {
+  meal_id=$1
+
+  echo "Getting meal by ID ($meal_id)..."
+  response=$(curl -s -X GET "$BASE_URL/get-meal-by-id/$meal_id")
+  if echo "$response" | grep -q '"status": "succeess"'; then
+    echo "Meal retrieved succesfully by ID ($meal_id)."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "Meal JSON (ID $meal_id):"
+      echo "$response" |jq .
     fi
-  }
+  else
+    echo "Failed to get meal by ID ($meal_id)."
+    exit 1
+  fi
+}
 
-  get_all_meals() {
-    echo "Getting all meals in the meal list..."
-    
-  }
+get_meal_by_name() {
+  meal_name=$1
 
+  echo "Getting meal by Name ($meal_name)..."
+  response=$(curl -s -X GET "$BASE_URL/get-meal-by-name/$meal_name")
+  if echo "$response" | grep -q '"status": "succeess"'; then
+    echo "Meal retrieved succesfully by Name ($meal_name)."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "Meal JSON (by meal name):"
+      echo "$response" |jq .
+    fi
+  else
+    echo "Failed to get meal by Name ($meal_name)."
+    exit 1
+  fi
+}
+
+############################################################
+#
+# Battle
+#
+############################################################
+
+battle() {
+  echo "Initiating a battle..."
+  response=$(curl -s -X GET "$BASE_URL/battle")
+  
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Battle done successfully"
+  else
+    echo "Failed to battle"
+    exit 1
+  fi
+}
+
+clear_combatants() {
+  echo "Clearing combatants..."
+  response=$(curl -s -X POST "$BASE_URL/clear-combatants")
+
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Combatants cleared successfully."
+  else
+    echo "Failed to clear combatants"
+    exit 1
+  fi
+}
+
+
+
+############################################################
+#
+# Leaderboard
+#
+############################################################
 
 # Health checks
 check_health
