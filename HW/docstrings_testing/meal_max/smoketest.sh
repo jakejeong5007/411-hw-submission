@@ -161,6 +161,22 @@ clear_combatants() {
 # Leaderboard
 #
 ############################################################
+get_meal_leaderboard() {
+  echo "Getting meal leaderboard sorted by wins..."
+  response=$(curl -s -X GET "$BASE_URL/meal-leaderboard?sort=wins")
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Meal leaderboard retrieved successfully."
+    if [ "$ECHO_JSON" = true ]; then
+      echo "Leaderboard JSON (sorted by wins):"
+      echo "$response" | jq .
+    fi
+  else
+    echo "Failed to get meal leaderboard."
+    exit 1
+  fi
+}
+
+
 
 # Health checks
 check_health
