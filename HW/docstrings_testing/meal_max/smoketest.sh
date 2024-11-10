@@ -124,14 +124,6 @@ get_meal_by_name() {
   fi
 }
 
-get_combatants() {
-  
-}
-
-prep_combatant() {
-
-}
-
 ############################################################
 #
 # Battle
@@ -160,6 +152,31 @@ clear_combatants() {
     echo "Failed to clear combatants"
     exit 1
   fi
+}
+
+get_combatants() {
+  echo "Getting combatants..."
+  response=$(curl -s -X POST "$BASE_URL/get-combatants")
+
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Combatants retrieved successfully."
+  else
+    echo "Failed to get combatants"
+    exit 1
+  fi
+}
+
+prep_combatant() {
+  echo "Preparing combatants..."
+  response=$(curl -s -X POST "$BASE_URL/prep-combatants")
+  
+  if echo "$response" | grep -q '"status": "success"'; then
+    echo "Combatants prepared successfully."
+  else
+    echo "Failed to prepare combatants"
+    exit 1
+  fi
+
 }
 
 
