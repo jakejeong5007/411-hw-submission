@@ -124,6 +124,14 @@ get_meal_by_name() {
   fi
 }
 
+get_combatants() {
+  
+}
+
+prep_combatant() {
+
+}
+
 ############################################################
 #
 # Battle
@@ -161,7 +169,7 @@ clear_combatants() {
 # Leaderboard
 #
 ############################################################
-get_meal_leaderboard() {
+get_leaderboard() {
   echo "Getting meal leaderboard sorted by wins..."
   response=$(curl -s -X GET "$BASE_URL/meal-leaderboard?sort=wins")
   if echo "$response" | grep -q '"status": "success"'; then
