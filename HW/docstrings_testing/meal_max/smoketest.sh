@@ -237,6 +237,7 @@ get_meal_by_name "Burger"
 
 delete_meal 3
 
+# Clear combatants before battle
 clear_combatants
 
 # Test the battle functionality
