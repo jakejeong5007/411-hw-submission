@@ -61,7 +61,7 @@ clear_meals() {
 
 add_meal() {
   meal=$1
-  cuisine=$1
+  cuisine=$2
   price=$3
   difficulty=$4
 
@@ -69,7 +69,7 @@ add_meal() {
   curl -s -X POST "$BASE_URL/create-meal" -H "Content-Type: application/json" \
     -d "{\"meal\":\"$meal\", \"cuisine\":\"$cuisine\", \"price\":\"$price\", \"difficulty\":\"$difficulty\"}" | grep -q '"status": "success"'
 
-  if [$? -eq 0]; then
+  if [ $? -eq 0 ]; then
     echo "Meal added successfully."
   else
     echo "Failed to add meal"
@@ -99,7 +99,7 @@ get_meal_by_id() {
     echo "Meal retrieved succesfully by ID ($meal_id)."
     if [ "$ECHO_JSON" = true ]; then
       echo "Meal JSON (ID $meal_id):"
-      echo "$response" |jq .
+      echo "$response" | jq .
     fi
   else
     echo "Failed to get meal by ID ($meal_id)."
@@ -202,13 +202,53 @@ get_leaderboard() {
 }
 
 
-
+echo "Running health checks"
 # Health checks
 check_health
 check_db
 
-# Clear the meal list
+echo "Running meal management tests..."
+
+# Clear the meal list to start fresh
 clear_meals
 
+# Add meals
+add_meal "Spaghetti" "Italian" 12.99 "MED"
+add_meal "Sushi" "Japanese" 15.49 "HIGH"
+add_meal "Tacos" "Mexican" 8.99 "LOW"
+add_meal "Pad Thai" "Thai" 10.99 "MED"
+add_meal "Burger" "American" 9.49 "LOW"
 
-echo "All tests passed succesfully"
+# Test retrieving meals by ID (valid cases)
+get_meal_by_id 1
+get_meal_by_id 2
+
+# Test retrieving meals by Name (valid cases)
+get_meal_by_name "Sushi"
+get_meal_by_name "Burger"
+
+# Edge Case: Retrieve a non-existent meal by ID
+get_meal_by_id 999
+
+# Edge Case: Retrieve a non-existent meal by Name
+get_meal_by_name "NonExistentMeal"
+
+# Delete a meal by ID and verify it's gone
+delete_meal 3
+get_meal_by_id 3
+
+# Attempt to delete a non-existent meal
+delete_meal 999
+
+# Test the battle functionality
+prep_combatant
+battle
+
+# Retrieve combatants and leaderboard after battles
+get_combatants
+get_leaderboard
+
+# Cleanup: Clear the meal list at the end
+clear_meals
+
+echo "All meal management tests passed successfully!"
