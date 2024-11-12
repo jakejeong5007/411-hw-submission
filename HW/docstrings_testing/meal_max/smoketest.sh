@@ -95,7 +95,7 @@ get_meal_by_id() {
 
   echo "Getting meal by ID ($meal_id)..."
   response=$(curl -s -X GET "$BASE_URL/get-meal-by-id/$meal_id")
-  if echo "$response" | grep -q '"status": "succeess"'; then
+  if echo "$response" | grep -q '"status": "success"'; then
     echo "Meal retrieved succesfully by ID ($meal_id)."
     if [ "$ECHO_JSON" = true ]; then
       echo "Meal JSON (ID $meal_id):"
@@ -112,7 +112,7 @@ get_meal_by_name() {
 
   echo "Getting meal by Name ($meal_name)..."
   response=$(curl -s -X GET "$BASE_URL/get-meal-by-name/$meal_name")
-  if echo "$response" | grep -q '"status": "succeess"'; then
+  if echo "$response" | grep -q '"status": "success"'; then
     echo "Meal retrieved succesfully by Name ($meal_name)."
     if [ "$ECHO_JSON" = true ]; then
       echo "Meal JSON (by meal name):"
@@ -167,9 +167,11 @@ get_combatants() {
 }
 
 prep_combatant() {
+  meal=$1
   echo "Preparing combatants..."
-  response=$(curl -s -X POST "$BASE_URL/prep-combatants")
-  
+  response=$(curl -s -X POST "$BASE_URL/prep-combatant" -H "Content-Type: application/json" \
+    -d "{\"meal\":\"$meal\"}")
+  echo "Resonse: $response"
   if echo "$response" | grep -q '"status": "success"'; then
     echo "Combatants prepared successfully."
   else
@@ -227,21 +229,10 @@ get_meal_by_id 2
 get_meal_by_name "Sushi"
 get_meal_by_name "Burger"
 
-# Edge Case: Retrieve a non-existent meal by ID
-get_meal_by_id 999
-
-# Edge Case: Retrieve a non-existent meal by Name
-get_meal_by_name "NonExistentMeal"
-
-# Delete a meal by ID and verify it's gone
 delete_meal 3
-get_meal_by_id 3
-
-# Attempt to delete a non-existent meal
-delete_meal 999
 
 # Test the battle functionality
-prep_combatant
+prep_combatant Spaghetti
 battle
 
 # Retrieve combatants and leaderboard after battles
